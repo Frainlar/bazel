@@ -1,0 +1,29 @@
+module(name = "bazel_monorepo")
+
+# Add rules_nodejs for Node.js dependencies
+bazel_dep(name = "rules_nodejs", version = "6.3.2")
+
+# Add rules_python for Python dependencies
+bazel_dep(name = "rules_python", version = "0.40.0")
+
+# Set up pip rules for Python dependencies
+pip = use_extension("@rules_python//python/extensions:pip.bzl", "pip")
+
+pip.parse(
+    name = "pip",
+    requirements_lock = "//:requirements_lock.txt",
+)
+
+use_repo(pip, "pip")
+
+# Node.js toolchain setup
+use_extension("@rules_nodejs//nodejs:extensions.bzl", "nodejs")
+
+# Register Node.js toolchains
+nodejs.toolchain(
+    name = "nodejs_toolchain",
+    node_version = "16.14.2",  # Update Node.js version if necessary
+    package_manager = "bun",  # Specify package manager: 'bun', 'npm', or 'yarn'
+)
+
+use_repo("@rules_nodejs//nodejs:repositories.bzl", "nodejs_toolchain")

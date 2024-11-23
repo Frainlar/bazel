@@ -1,14 +1,8 @@
-py_library(
-    name = "server_codegenie_lib",
-    srcs = glob(["**/*.py"]),
-    deps = [
-        "@pip_deps//fastapi",
-        "@pip_deps//uvicorn",
-    ],
-)
+load("@rules_python//python:defs.bzl", "py_binary")
 
 py_binary(
     name = "server_codegenie",
-    srcs = ["app/main.py"],
-    deps = [":server_codegenie_lib"],
+    srcs = glob(["**/*.py"]),
+    deps = ["@pip//:requirements"],
+    main = "app/main.py",  # Update with your FastAPI app entry point
 )
